@@ -1,0 +1,173 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4>My Events</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <table class="table table-hover table-striped table-bordered">
+            <thead style="background-color:#cccccc;">
+                <tr>
+                    <th class="col-xs-2 col-sm-2 col-md-2">Event Name</th>
+                    <th class="col-xs-2 col-sm-2 col-md-2">Start Time</th>
+                    <th class="col-xs-2 col-sm-2 col-md-2">Start Date</th>
+                    <th class="col-xs-2 col-sm-2 col-md-2">End Time</th>
+                    <th class="col-xs-2 col-sm-2 col-md-2">End Date</th>
+                    <th class="col-xs-2 col-sm-2 col-md-2 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="userEvent in userEvents">
+                    <td>{{userEvent.Name}}</td>
+                    <td>{{userEvent.startTime | date: 'hh:mm a'}}</td>
+                    <td>{{userEvent.startDate | date: 'MM/dd/yy'}}</td>
+                    <td>{{userEvent.endTime | date: 'hh:mm a'}}</td>
+                    <td>{{userEvent.endDate | date: 'MM/dd/yy'}}</td>
+                    <td>
+                        <!-- Single button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)" class="btn btn-link"  data-toggle="modal"  data-target="#myModal" ng-click="setCurrentEvent(userEvent)">Delete</a></li>
+                                <li><a href="javascript:void(0)" class="btn btn-link"  data-toggle="modal" data-target="#myEditEventModal" ng-click="editEvent(userEvent)">Edit</a></li>
+                                <li><a href="javascript:void(0)" class="btn btn-link"  data-toggle="modal" data-target="#myViewEventModal"  ng-click="viewEvent(userEvent)">View</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot ng-if="userEvents.length<=0">
+                <tr>
+                    <td colspan="4" align="center">
+                        <span>No Events found</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+   
+</div>
+
+<!-- Modal For Delete Event -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Delete Event</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <label class="control-label">Name:</label>
+                        <span>{{selectedEvent.Name}}</span>
+                    </div>
+                </div>  
+               <div class="row">
+                   <div class="col-xs-12 col-sm-12 col-md-12">
+                       <h5 class="text-info">
+                           Are you sure you wish to delete event? If yes, please click on Submit.
+                       </h5>
+                   </div>
+               </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="deleteEvent()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal For Edit Event -->
+<div class="modal fade" id="myEditEventModal" tabindex="-1" role="dialog" aria-labelledby="myEditEventModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Edit Event</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label">Event Name:</label>
+                                <input type="text" class="form-control" ng-model="selectedEvent.Name" ng-disabled="true"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Start Time:</label>
+                                <input type="time" class="form-control" ng-model="newEvent.startTime" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Start Date:</label>
+                                <input type="date" class="form-control" ng-model="selectedEvent.startDate" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">End Time:</label>
+                                <input type="time" class="form-control" ng-model="newEvent.endTime" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">End Date:</label>
+                                <input type="date" class="form-control" ng-model="selectedEvent.endDate" />
+                            </div>
+                        </form>
+                    </div>
+
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="updateEvent()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal For View Event -->
+<div class="modal fade" id="myViewEventModal" tabindex="-1" role="dialog" aria-labelledby="myViewEventModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Event Info</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label">Name:</label>
+                                <span>{{selectedEvent.Name}}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Start Time:</label>
+                                <span>{{selectedEvent.startTime}}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Start Date:</label>
+                                <span>{{selectedEvent.startDate}}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">End Time:</label>
+                                <span>{{selectedEvent.endTime}}</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">End Date:</label>
+                                <span>{{selectedEvent.endDate}}</span>
+                            </div>
+                        </form>
+                    </div>
+
+                </div> 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
